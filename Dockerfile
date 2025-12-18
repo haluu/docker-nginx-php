@@ -1,4 +1,4 @@
-FROM alpine:3.19
+FROM alpine:3.23
 LABEL Maintainer="aluu"
 LABEL Description="Lightweight container with Nginx & PHP based on Alpine Linux"
 

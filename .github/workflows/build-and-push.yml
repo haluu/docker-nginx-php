@@ -1,0 +1,31 @@
+name: Build and Push to Self-Hosted Registry
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-and-push-image:
+    runs-on: ubuntu-latest
+    environment: prod
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+            
+      - name: Log in to self-hosted registry
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ secrets.REGISTRY_URL }}
+          username: ${{ secrets.REGISTRY_USERNAME }}
+          password: ${{ secrets.REGISTRY_PASSWORD }}
+
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          push: true
+          tags: |
+            ${{ secrets.REGISTRY_URL }}/nginx-php:0.1
+            ${{ secrets.REGISTRY_URL }}/nginx-php:latest
