@@ -26,7 +26,7 @@ RUN apk add --no-cache \
     supervisor 
 
 # Create symlink so programs depending on `php` still function
-RUN ln -s /usr/bin/php84 /usr/bin/php
+RUN rm -f /usr/bin/php && ln -s /usr/bin/php84 /usr/bin/php
 
 # Configure nginx
 COPY config/nginx.conf /etc/nginx/nginx.conf
@@ -42,10 +42,11 @@ COPY config/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 RUN mkdir -p /var/www/html
 
 # Make sure files/folders needed by the processes are accessable when they run under the nobody user
-RUN chown -R nobody.nobody /var/www/html && \
-  chown -R nobody.nobody /run && \
-  chown -R nobody.nobody /var/lib/nginx && \
-  chown -R nobody.nobody /var/log/nginx
+RUN mkdir -p /var/www/html /run /var/lib/nginx /var/log/nginx && \
+  chown -R nobody:nobody /var/www/html && \
+  chown -R nobody:nobody /run && \
+  chown -R nobody:nobody /var/lib/nginx && \
+  chown -R nobody:nobody /var/log/nginx
 
 # Switch to use a non-root user from here on
 USER nobody
